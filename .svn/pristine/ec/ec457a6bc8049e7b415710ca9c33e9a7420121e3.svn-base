@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>i-Vital System</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1"> 
+        <link rel="stylesheet"  href="lib/css/jquery.mobile.min.css">
+        <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+        <script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+        <script type="text/javascript">
+            jsonurl = "";
+            function setData(callurl) {
+                $.ajax({url: callurl + "/getData.php", dataType: "json", success: function(jsonobj) {
+                        username=jsonobj.username;
+                        bodytemp=jsonobj.bodytemp;
+                        bloodp=jsonobj.bloodp;
+                        heartb=jsonobj.heartb;
+                        $("#username").html(jsonobj.username);
+                        $("#bodytemp").html(jsonobj.bodytemp);
+                        if(bodytemp>37.2){
+                            $("#bodytemp").css("color","red");
+                        }else{
+                            $("#bodytemp").css("color","black");
+                        }
+                        $("#bloodp").html(jsonobj.bloodp);
+                        if(bloodp>160){
+                            $("#bloodp").css("color","red");
+                        }else{
+                            $("#bloodp").css("color","black");
+                        }
+                        $("#heartb").html(jsonobj.heartb);
+                        if(heartb>90){
+                            $("#heartb").css("color","red");
+                        }else{
+                            $("#heartb").css("color","black");
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        $("#username").html(xhr + ' ' + status + ' ' + error);
+                        clearTimeout(timerID);
+                    }
+                });
+            }
+            function callData(callurl) {
+                if (callurl) {
+                    chkhttp = callurl.substring(0, 7);
+
+                    if (chkhttp == "http://") {
+                        jsonurl = callurl;
+                    } else {
+                        jsonurl = "http://" + callurl;
+                    }
+                    $("#url").fadeOut(1);
+
+                }
+                setData(jsonurl);
+                timerID = setTimeout(function() {
+                    callData(null);
+                }, 1000);
+            }
+            $(document).live('pageinit', function(event) {
+                height = $(window).height() - 42 - 43 - 30;
+                $('#content').css('min-height', height + 'px');
+            });
+        </script>
+    </head>
+    <body>
+
+        <div data-role="page">
+
+            <div data-role="header" id="header">
+                <h1>i-Vital System</h1>
+            </div><!-- /header -->
+
+            <div data-role="content" id="content">
+                <div id="url">
+                    <input type="text" name="callurl">
+                    <button onclick="callData(document.getElementsByName('callurl')[0].value)">Get Data</button>
+                    <br/>
+                </div>
+                <ul data-role="listview">
+                    <li>
+                        <table style="width: 100%;">
+                            <tr><td><img src="lib/css/images/User.png"></td><td style="text-align: right;"><h1><span id="username"></span></h1></td></tr>
+                        </table>
+                    </li>
+                    <li><table style="width: 100%;">
+                            <tr><td><img src="lib/css/images/Thermometer.png"></td><td style="text-align: right;"><span id="bodytemp"></span></td></tr>
+                        </table>
+                    </li>
+                    <li>
+                        <table style="width: 100%;">
+                            <tr><td><img src="lib/css/images/Sphygmomanometer.png"></td><td style="text-align: right;"><span id="bloodp"></span></td></tr>
+                        </table>
+                    </li>
+                    <li>
+                        <table style="width: 100%;">
+                            <tr><td><img src="lib/css/images/Heartbeat.png"></td><td style="text-align: right;"><span id="heartb"></span></td></tr>
+                        </table>
+                    </li>
+                </ul>
+            </div><!-- /content -->
+
+            <div data-role="footer" id="footer" style="text-align: left;">
+                <h4>© 2013-2014 VTC</h4>
+            </div><!-- /footer -->
+        </div><!-- /page -->
+    </body>
+</html>
