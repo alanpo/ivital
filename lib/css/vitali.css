@@ -1,0 +1,8 @@
+.figurecell {
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    background-repeat:no-repeat;
+    background-position: 5% 80%;
+    text-align: right; font-size: 400%; 
+    box-shadow: 10px 10px 5px #888;
+}
